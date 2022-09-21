@@ -16,39 +16,35 @@ public class BunTest {
     private float delta;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         bun = new Bun("булочка", actualPrice);
     }
 
 
-    public BunTest(float actualPrice, float expectedPrice, float delta ) {
+    public BunTest(float actualPrice, float expectedPrice, float delta) {
         this.actualPrice = actualPrice;
         this.expectedPrice = expectedPrice;
         this.delta = delta;
     }
 
     @Parameterized.Parameters
-    public static Object[][] getPrice()
-    {
-        return new Object[][] {
+    public static Object[][] getPrice() {
+        return new Object[][]{
                 {55.00f, 55.01f, 0.01f},
                 {57.00f, 57.00f, 0.00f}
         };
     }
 
     @Test
-    public void getNameBunReturnString(){
-
+    public void getNameBunReturnString() {
         String expectedNameBun = "булочка";
-
         assertEquals("Name bun should be String", expectedNameBun, bun.getName());
     }
 
     @Test
-    public void getNameBunReturnFloat(){
-
+    public void getNameBunReturnFloat() {
         assertEquals("Price bun should be float", expectedPrice, bun.getPrice(), delta);
     }
 
-    }
+}
 

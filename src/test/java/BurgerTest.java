@@ -16,13 +16,14 @@ import praktikum.Burger;
 import org.junit.Test;
 import praktikum.Ingredient;
 import praktikum.IngredientType;
+
 import static org.hamcrest.CoreMatchers.containsString;
+
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-
 
 
 @RunWith(Parameterized.class)
@@ -39,9 +40,9 @@ public class BurgerTest {
     @Mock
     Ingredient secondIngredient;
     @Mock
-     Bun bun;
+    Bun bun;
     @Mock
-    IngredientType type ;
+    IngredientType type;
 
     public BurgerTest(String bunName, String ingredientName, float bunPrice, float ingredientPrice, float burgerPrice, float delta) {
         this.bunName = bunName;
@@ -51,80 +52,62 @@ public class BurgerTest {
         this.burgerPrice = burgerPrice;
         this.delta = delta;
     }
-
     @Before
-    public void setUp(){
+    public void setUp() {
         burger = new Burger();
         MockitoAnnotations.openMocks(this);
     }
-
     @After
-    public void tearDown(){
-
+    public void tearDown() {
         burger.ingredients.clear();
-
     }
-
-
     @Parameterized.Parameters
-    public static Object[][] getBurger()
-    {
-        return new Object[][] {
+    public static Object[][] getBurger() {
+        return new Object[][]{
                 {"булочка с кунжутом", "соленый огурчик", 56.000000f, 80.000000f, 272.00000f, 0.03f},
                 {"чесночная булочка", "жареный бекон", 80.003000f, 80.200000f, 320.40600f, 0.03f}
         };
     }
-
-
     @Test
-    public void addIngredientInBurgerSuccess(){
+    public void addIngredientInBurgerSuccess() {
         burger.addIngredient(ingredient);
-        Assert.assertEquals("В списке ингредиентов должен быть хотя бы один элемент" ,false, burger.ingredients.isEmpty());
+        Assert.assertEquals("В списке ингредиентов должен быть хотя бы один элемент", false, burger.ingredients.isEmpty());
     }
-
     @Test
-    public void removeIngredientInBurgerSuccess(){
+    public void removeIngredientInBurgerSuccess() {
         burger.addIngredient(ingredient);
         burger.removeIngredient(0);
-
-        Assert.assertEquals("Ингредиент должен быть удален из списка" ,false, burger.ingredients.contains(ingredient));
-
+        Assert.assertEquals("Ингредиент должен быть удален из списка", false, burger.ingredients.contains(ingredient));
     }
-
     @Test
-    public void moveIngredientInBurgerSuccess(){
-
+    public void moveIngredientInBurgerSuccess() {
         burger.ingredients.add(ingredient);
         burger.ingredients.add(secondIngredient);
         int index = 0;
         int newIndex = 1;
         burger.moveIngredient(index, newIndex);
-        Assert.assertEquals( "Ингредиенты в списке должны поменяться местами",secondIngredient, burger.ingredients.get(0));
-        Assert.assertEquals( "Ингредиенты в списке должны поменяться местами", ingredient, burger.ingredients.get(1));
-
+        Assert.assertEquals("Ингредиенты в списке должны поменяться местами", secondIngredient, burger.ingredients.get(0));
+        Assert.assertEquals("Ингредиенты в списке должны поменяться местами", ingredient, burger.ingredients.get(1));
     }
-
     @Test
-    public void getPriceReturnPriceForIngredientAndBun(){
+    public void getPriceReturnPriceForIngredientAndBun() {
         burger.bun = bun;
         burger.ingredients.add(ingredient);
         burger.ingredients.add(ingredient);
         float actualPriceBun = bunPrice;
-        float actualIngredient= ingredientPrice;
-        float expectedPrice=burgerPrice;
+        float actualIngredient = ingredientPrice;
+        float expectedPrice = burgerPrice;
 
         Mockito.when(bun.getPrice()).thenReturn(actualPriceBun);
         Mockito.when(ingredient.getPrice()).thenReturn(actualIngredient);
 
         Assert.assertEquals("Цена должна быть равна expectedPrice", expectedPrice, burger.getPrice(), delta);
     }
-
     @Test
-    public void setBunsSuccess(){
+    public void setBunsSuccess() {
         burger.setBuns(bun);
         MatcherAssert.assertThat(burger.bun, notNullValue());
     }
-
     @Test
     public void getReceiptReturnStringWithBunNameBunPriceIngredientNameIngredientPrice() {
         burger.bun = bun;
@@ -136,14 +119,10 @@ public class BurgerTest {
         Mockito.when(ingredient.getType()).thenReturn(type);
         Mockito.when(bun.getName()).thenReturn(bunName);
         Mockito.when(ingredient.getName()).thenReturn(ingredientName);
-        Assert.assertEquals("В рецепте должен быть хотя бы один ингредиент" ,false, burger.getReceipt().isEmpty());
+        Assert.assertEquals("В рецепте должен быть хотя бы один ингредиент", false, burger.getReceipt().isEmpty());
         MatcherAssert.assertThat(burger.getReceipt(), allOf(containsString(bunName), containsString(ingredientName)));
         MatcherAssert.assertThat(burger.getReceipt(), containsString(String.format("%nPrice: %f%n", burgerPrice)));
-
-
     }
-
-
 
 
 }
